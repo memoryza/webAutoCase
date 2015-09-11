@@ -1,0 +1,142 @@
+
+
+===[log]2015-9-9 10:17:20===
+
+[caseName] index
+
+[totalCase] 0
+
+[successCase] 0
+
+[failCase] 0
+====END====
+
+
+===[log]2015-9-9 10:19:42===
+
+[caseName] index
+
+[totalCase] 0
+
+[successCase] 0
+
+[failCase] 0
+====END====
+
+
+===[log]2015-9-9 10:23:16===
+
+[caseName] index
+
+[totalCase] 0
+
+[successCase] 0
+
+[failCase] 0
+====END====
+
+
+===[log]2015-9-9 10:23:40===
+
+[caseName] index
+
+[totalCase] 0
+
+[successCase] 0
+
+[failCase] 0
+====END====
+
+
+===[log]2015-9-9 10:25:10===
+
+[caseName] index
+
+[totalCase] 0
+
+[successCase] 0
+
+[failCase] 0
+====END====
+
+
+===[log]2015-9-9 10:25:49===
+====END====
+
+
+===[log]2015-9-9 10:26:39===
+====END====
+
+
+===[log]2015-9-9 10:27:1===
+====END====
+
+
+===[log]2015-9-9 10:28:0===
+====END====
+
+
+===[log]2015-9-9 10:29:11===
+====END====
+
+
+===[log]2015-9-9 10:29:37===
+====END====
+
+
+===[log]2015-9-9 11:26:31===
+
+performanceTestParams:
+
+[0] ./performanceTest.js
+
+[1] http://gupiao.baidu.com
+
+[2] ./log.txt
+
+reponseInfo
+
+[load] http://gupiao.baidu.com
+
+[title] 百度股市通-选股更轻松
+====END====
+
+
+===[log]2015-9-9 11:27:25===
+
+performanceTestParams:
+
+[0] ./performanceTest.js
+
+[1] http://gupiao.baidu.com
+
+[2] /Users/memoryza/performace/log.txt
+
+reponseInfo
+
+[load] http://gupiao.baidu.com
+
+[title] 百度股市通-选股更轻松
+====END====
+
+
+===[log]2015-9-9 11:27:47===
+
+performanceTestParams:
+
+[0] ./performanceTest.js
+
+[1] http://gupiao.baidu.com
+
+[2] /Users/memoryza/performace/log.txt
+
+reponseInfo
+
+[load] http://gupiao.baidu.com
+
+[title] 百度股市通-选股更轻松
+====END====
+
+
+===[log]2015-9-9 12:31:26===
+====END====

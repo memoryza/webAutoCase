@@ -1,0 +1,13 @@
+{
+	"ignoreSslErrors": true,
+	"debug": true,
+	"diskCacheEnable": true,
+	"autoLoadImage": false,
+	"offlineStoragePath": "/Users/memoryza/svn/performance/cache/",
+	"offlineStorageDefaultQuota": 4096,
+	"localToRemoteUrlAccessEnabled": true,
+	"maxDiskCacheSize": 40960,
+	"sslProtocol": "any",
+	"webdirverLogfile": "/Users/memoryza/svn/performance/log/log.log",
+	"webdriverLoglevel": "WARN"	
+}
