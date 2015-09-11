@@ -24,7 +24,7 @@ try {
 	p.fail {margin-left: 20px;background: #f00;height: 18px;line-height: 18px;font-size:14px;}
 	p.text {margin-left: 40px;color: #fff;height: 18px;line-height: 18px;font-size:12px; background: #25cebc;}
 	p.text-info {color: #000; margin-left: 60px;height: 18px;line-height: 18px;font-size:12px; }
-	div img {text-align: center;}
+	div .image {text-align: center;}
 </style>
 <div id="container">
 	
@@ -53,10 +53,10 @@ try {
 	 		html.push('</p>');
 	 		html.push('<p class="text">case总数' + retsult.caseInfo[i].total + '; 成功数：' + retsult.caseInfo[i].success + ';失败数：' + retsult.caseInfo[i].fail + '</p>');
 	 		if (retsult.caseInfo[i].info && retsult.caseInfo[i].info.text) {
-	 			html.push('<p class="text-info"><span>错误信息:</span>' + retsult.caseInfo[i].info.text + '</p>');
+	 			html.push('<p class="text-info"><span>信息:</span>' + retsult.caseInfo[i].info.text + '</p>');
 	 		}
 	 		if (retsult.caseInfo[i].info && retsult.caseInfo[i].info.image) {
-	 			html.push('<img src="' + retsult.caseInfo[i].info.image + '"></p>');
+	 			html.push('<p class="image"><img src="' + retsult.caseInfo[i].info.image + '"></p>');
 	 		}
 	 	}
 	 	html.push('</div>');

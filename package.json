@@ -1,0 +1,24 @@
+{
+  "name": "webmonitor",
+  "version": "0.0.1",
+  "description": "web monitor base on phantomjs、jasmine、webpage",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "phantomjs main.js"
+  },
+  "keywords": [
+    "webmonitor"
+  ],
+  "author": "memoryza",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.2.0",
+    "jasmine": "^2.3.2",
+    "jquery": "^2.1.4",
+    "nimble": "0.0.2",
+    "webpage": "^0.3.0"
+  }
+}

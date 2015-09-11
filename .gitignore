@@ -1,0 +1,13 @@
+#测试文件
+log/
+node_modules/
+result/error/
+result/ret.json
+test/
+
+npm-debug.log
+
+performanceTest.js
+
+
+

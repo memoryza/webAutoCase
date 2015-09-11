@@ -15,9 +15,6 @@ writeFile.prototype = {
 	write: function(str) {
 		this.content += "\n" + str + "\n";
 	},
-	writeJSON: function (json) {
-
-	},
 	end: function() {
 		this.content += "====END====\n";
 		try {

@@ -1,24 +1,24 @@
-/**要想知道什么是xhr(http://www.softwareishard.com/blog/har-12-spec/)
-*例子（http://www.softwareishard.com/blog/har-viewer/）
+/**
+ * @file 组织请求详细状态
+ * @desc 要想知道什么是har(http://www.softwareishard.com/blog/har-12-spec/)
+ * @desc 例子（http://www.softwareishard.com/blog/har-viewer/）
 */
-var Pconfig = require('../config');
-var MyUtils = require('./utils');
+var pconfig = require('../config');
+var myUtils = require('./utils');
 var fs = require('fs');
 
 fs.changeWorkingDirectory(phantom.libraryPath);
 
 if (!Date.prototype.toISOString) {
     Date.prototype.toISOString = function () {
-        function pad(n) { return n < 10 ? '0' + n : n; }
-        function ms(n) { return n < 10 ? '00'+ n : n < 100 ? '0' + n : n }
         return this.getFullYear() + '-' +
-            pad(this.getMonth() + 1) + '-' +
-            pad(this.getDate()) + 'T' +
-            pad(this.getHours()) + ':' +
-            pad(this.getMinutes()) + ':' +
-            pad(this.getSeconds()) + '.' +
-            ms(this.getMilliseconds()) + 'Z';
-    }
+            myUtils.pad(this.getMonth() + 1) + '-' +
+            myUtils.pad(this.getDate()) + 'T' +
+            myUtils.myUtilspad(this.getHours()) + ':' +
+            myUtils.pad(this.getMinutes()) + ':' +
+            myUtils.pad(this.getSeconds()) + '.' +
+            myUtils.ms(this.getMilliseconds()) + 'Z';
+    };
 }
 
 function createHAR(address, title, startTime, resources) {
@@ -37,7 +37,7 @@ function createHAR(address, title, startTime, resources) {
         // they aren't included in specification
         if (request.url.match(/(^data:image\/.*)/i)) {
             return;
-    }
+        }
 
         entries.push({
             startedDateTime: request.time.toISOString(),
@@ -79,7 +79,6 @@ function createHAR(address, title, startTime, resources) {
             pageref: address
         });
     });
-
     return {
         log: {
             version: '1.2',
@@ -125,11 +124,17 @@ page.onResourceReceived = function (res) {
     }
 };
 
-
-function initHAR(address, callback, type, data) {
-    if(typeof callback !=  'function') {
-        type = callback;
-        data = type;
+/**
+ * 获取网络请求状态
+ * @param {String} address 请求地址
+ * @param {String} data 附加数据
+ * @param {Function} callback 回调函数
+ * @param {String} type 类型 post、get
+ */
+function initHAR(address, data, callback, type) {
+    if(typeof data ==  'function') {
+        type =  callback;
+        callback = data;
     }
     var startTime = Date.now();
     // if(type == 'post') {
@@ -155,35 +160,30 @@ function initHAR(address, callback, type, data) {
             page.endTime = new Date();
             var loadTime = Date.now() - startTime;
             if (status !== 'success') {
-                typeof callback == 'function' 
-                    ? (page.render(filename),callback({errcode: '-1', msg: 'FAIL to load the address', page: page, loadTime: loadTime}))
-                    : console.log('case error:FAIL to load the address');
+                typeof callback == 'function'
+                    ? callback({errcode: '-1', msg: 'FAIL to load the address', page: page, loadTime: loadTime})
+                    : console.log('case error:FAIL to load ' + address);
 
             } else {
                 page.title = page.evaluate(function () {
                     return document.title;
                 });
-                
                 har = createHAR(address, page.title, page.startTime, page.resources);
-                if(har.log.entries.length == 1 && Pconfig.errcodeList.indexOf(har.log.entries[0].response.status) >= 0) {
-                    
-                    typeof callback == 'function' 
-                        ? (page.render(filename), callback({errcode: har.log.entries[0].response.status , msg: 'load error', loadTime: loadTime, page: page}))
-                        : console.log('case error');
+                if(har.log.entries.length == 1 && pconfig.errcodeList.indexOf(har.log.entries[0].response.status) >= 0) {
+                    typeof callback == 'function'
+                        ? callback({errcode: har.log.entries[0].response.status , msg: 'load error', loadTime: loadTime, page: page})
+                        : '';
                 } else {
-                    typeof callback == 'function' 
-                        ? callback({errcode: 0, msg: 'success', loadTime: loadTime,page: page, har: har})
-                        : console.log('case success');
+                    typeof callback == 'function'
+                        ? callback({errcode: 0, msg: 'success', loadTime: loadTime, page: page, har: har})
+                        : '';
                 }
             }
-            page.close();
         });
     // }
 }
 
-var filename = MyUtils.myUtils.errorFileDir('index');
-
 exports.initHAR = initHAR;
 exports.setCaseName = function(caseName) {
-    filename = myUtils.myUtils.errorFileDir(caseName);
+    filename = myUtils.errorFileDir(caseName);
 }
