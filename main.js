@@ -1,7 +1,8 @@
 var fs = require('fs');
 fs.changeWorkingDirectory(phantom.libraryPath);
 var myUtil = require('./common/utils');
-
+var cases = require('./casemain');
+var appCase = require('./case/appCase');
 // 统计输出case
 var caseNum = 0;
 var res = {
@@ -22,32 +23,32 @@ var caseCallBack = function (name, total, success, fail, info) {
     }
 }
 
-
-var caseList = [];
-// 读取case列表
-try {
-    var scanDirectory = function (path) {
-        if (fs.exists(path) && fs.isFile(path)) {
-            var modIdex = path.lastIndexOf('Case.js');
-            if(modIdex > 0) {
-                caseList.push(require(path));
-            }
-        } else if (fs.isDirectory(path)) {
-            fs.list(path).forEach(function (e) {
-                if ( e !== "." && e !== ".." ) {
-                    scanDirectory(path + '/' + e);
-                }
-            });
-        }
-    };
-    scanDirectory('./case');
-} catch(e) {
-    phantom.exit(1);
-}
+// // 读取case列表
+// try {
+//     var scanDirectory = function (path) {
+//         if (fs.exists(path) && fs.isFile(path)) {
+//             var modIdex = path.lastIndexOf('Case.js');
+//             if(modIdex > 0) {
+//                 caseList.push(require(path));
+//             }
+//         } else if (fs.isDirectory(path)) {
+//             fs.list(path).forEach(function (e) {
+//                 if ( e !== "." && e !== ".." ) {
+//                     scanDirectory(path + '/' + e);
+//                 }
+//             });
+//         }
+//     };
+//     scanDirectory('./case');
+// } catch(e) {
+//     phantom.exit(1);
+// }
 // 执行case
-var len = caseList.length;
+var len = cases.length;
 for (var i = 0; i < len; i++) {
-    caseList[i].testCase(caseCallBack);
+    (function (j) {
+        appCase.testCase(cases[j], caseCallBack);
+    })(i);
 }
 
 

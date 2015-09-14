@@ -30,7 +30,7 @@ try {
 	
 </div>
 <script type="text/javascript">
-	var retsult = JSON.parse('<?php echo $content;?>');
+	var retsult = JSON.parse(<?php echo json_encode($content);?>);
 	var c = document.getElementById('container');
 	var html = [];
 	if (c) {
@@ -52,8 +52,8 @@ try {
 	 		html.push(retsult.caseInfo[i].name);
 	 		html.push('</p>');
 	 		html.push('<p class="text">case总数' + retsult.caseInfo[i].total + '; 成功数：' + retsult.caseInfo[i].success + ';失败数：' + retsult.caseInfo[i].fail + '</p>');
-	 		if (retsult.caseInfo[i].info && retsult.caseInfo[i].info.text) {
-	 			html.push('<p class="text-info"><span>信息:</span>' + retsult.caseInfo[i].info.text + '</p>');
+	 		if (retsult.caseInfo[i].info && (typeof retsult.caseInfo[i].info.text === 'object')) {
+	 			html.push('<p class="text-info"><span>信息:</span>' + decodeURIComponent(retsult.caseInfo[i].info.text.join(',')) + '</p>');
 	 		}
 	 		if (retsult.caseInfo[i].info && retsult.caseInfo[i].info.image) {
 	 			html.push('<p class="image"><img src="' + retsult.caseInfo[i].info.image + '"></p>');
