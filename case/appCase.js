@@ -1,6 +1,7 @@
 /**
  * @file 个股PC版本监控Case
  * @author memoryza(jincai.wang@foxmail.com)
+ * @desc 收集请求回来的har信息
  */
 
 var fs = require('fs');
@@ -10,85 +11,120 @@ var $ = require('jquery');
 var har = require('../common/createHAR');
 var nimble = require('nimble');
 var myUtils = require('../common/utils');
-// var assert = require('../lib/assert');
 
 /**
  * 测试case情况
  * @param {Object} info {name: case名称, url: 网址, caseList: case列表的数组}
- * @param cb 回调信息
+ * @param {Function} cb 回调信息
+ * @return callback
  */
 exports.testCase = function (info, cb) {
-	var caseInfo = info;
-	if (typeof caseInfo.caseList === 'string') {
-		caseInfo.caseList = [caseInfo.caseList];
-	} else if(Object.prototype.toString.call(caseInfo.caseList) !== "[object Array]") {
-		 caseInfo.caseList = [];
-	}
-	function snap(page, cb) {
-		var fn = myUtils.errorFileDir('index');
-	    myUtils.waitFor(function () {
-	        setTimeout(function () {
-	            return true;
-	        }, 2500);
-	        return false;
-	    }, function () {
-	        page.render(fn);
-	        page.close();
-	        info.image = fn.substr(fn.indexOf('/'));
-	        cb(name, totalCase, successCase, failCase, info);
-	    });
-	}
-	var name = ['[caseName] 个股PC版本监控Case'];
-	var totalCase = 0, successCase = 0, failCase = 0;
-	var info = {
-		text: []
-	};
-	var funcData;
-	var parallel = [];
-	var totalCase = caseInfo.caseList.length;
+    var caseInfo = info;
+    if (myUtils.isType(caseInfo.caseList, 'String')) {
+        caseInfo.caseList = [caseInfo.caseList];
+    } else if (!myUtils.isType(caseInfo.caseList, 'Array')) {
+        caseInfo.caseList = [];
+    }
+    var successCase = 0, failCase = 0;
+    var info = {
+        text: [],// 存放错误信息
+        errorResource: []// 存放资源错误列表
+    };
+    var funcData;// har返回的data存放处
+    // 不包含case的执行一次请求
+    if (!caseInfo.caseList.length) {
+        if (caseInfo.url) {
+            har.initHAR(caseInfo.url, function (data) {
+                if (data.errcode !== 0) {
+                    info.text.push('网络请求失败');
+                }
+                analyseResoures(data.har);
+                return cb(caseInfo.name, 0, 0, 0, info);
+            });
+        } else {
+            return cb(caseInfo.name, 0, 0, 0, info);
+        }
+    }
+    var parallel = [];// 存放并行执行的case
+    var totalCase = caseInfo.caseList.length;
+    for (var i = 0; i < totalCase; i++) {
+        (function (j) {
+            parallel.push(function() {
+                var ret = funcData.page.evaluate('function () {'
+                    + 'return eval(' + caseInfo.caseList[j] + ');}');
+                if (ret) {
+                    successCase++;
+                } else {
+                    info.text.push(encodeURIComponent(caseInfo.caseList[j] + '失败'));
+                    failCase++;
+                }
+            });
+        })(i);
+    }
 
-	for (var i = 0; i < totalCase; i++) {
-		(function (j){
-			parallel.push(function() {
-				var ret = funcData.page.evaluate('function () {' + 
-					'return eval('+ caseInfo.caseList[j] +');}');
-				if (ret) {
-					successCase++;
-				} else {
-					info.text.push(encodeURIComponent(caseInfo.caseList[j] + '失败'));
-					failCase++;
-				}
-			})
-		})(i);
-	}
-	if (caseInfo.url && caseInfo.caseList.length) {
-		nimble.series([
-		    function (callback) {
-		        har.initHAR(caseInfo.url, function (data) {
-		            funcData = data;
-		            if (data.errcode === 0) {
-		            	nimble.parallel(parallel);
-		            } else {
-		            	info.text.push('网络请求失败');
-		            	failCase = totalCase;
-		            }
-		            callback();
-		        });
-		    },
-		    function () {
-		    	info.text.push(funcData.msg);
-		        if(funcData.errcode === 0) {
-		            if (failCase) {
-		            	snap(funcData.page, cb);
-		            } else {
-		            	cb(caseInfo.name, totalCase, successCase, failCase, info);
-		            }
-		        } else {
-		           snap(funcData.page, cb);
-		        }
-			}
-		]);
-	}
-   
+    if (caseInfo.url && caseInfo.caseList.length) {
+        nimble.series([
+            function (callback) {
+                har.initHAR(caseInfo.url, function (data) {
+                    funcData = data;
+                    if (data.errcode === 0) {
+                        nimble.parallel(parallel);
+                    } else {
+                        info.text.push('网络请求失败');
+                        failCase = totalCase;
+                    }
+                    analyseResoures(data.har);
+                    callback();
+                });
+            },
+            function () {
+                info.text.push(funcData.msg);
+                if(funcData.errcode === 0) {
+                    if (failCase) {
+                        snap(funcData.page, cb);
+                    } else {
+                        cb(caseInfo.name, totalCase, successCase, failCase, info);
+                    }
+                } else {
+                   snap(funcData.page, cb);
+                }
+            }
+        ]);
+    }
+    /**
+     * 截取屏幕图片
+     * @param {webPageObject} page webpage的实例
+     * @param {Function} cb 回调函数
+     */
+    function snap(page, cb) {
+        var fn = myUtils.errorFileDir('index');
+        myUtils.waitFor(function () {
+            setTimeout(function () {
+                return true;
+            }, 1500);
+            return false;
+        }, function () {
+            page.render(fn);
+            page.close();
+            info.image = fn.substr(fn.indexOf('/'));
+            cb(caseInfo.name, totalCase, successCase, failCase, info);
+        });
+    }
+    /**
+     * 分析页面是否包含请求失败资源
+     * @param {HAR} har： HTTP Archive Viewer
+     */
+    function analyseResoures(har) {
+        if (har.log && myUtils.isType(har.log.entries, 'Array')) {
+            var entries = har.log.entries;
+            var len = entries.length;
+            for (var i = 0; i < len; i++) {
+                if (entries[i] && entries[i].response
+                    && (entries[i].response.status === 404 || entries[i].response.status === 500)) {
+                    info.errorResource.push({url: entries[i].request.url, status: entries[i].response.status});
+                }
+            }
+        }
+    }
 };
 

@@ -3,7 +3,6 @@
  * @desc 要想知道什么是har(http://www.softwareishard.com/blog/har-12-spec/)
  * @desc 例子（http://www.softwareishard.com/blog/har-viewer/）
 */
-
 var myUtils = require('./utils');
 var errcodeList = [404, 500, 502];
 
@@ -18,7 +17,6 @@ if (!Date.prototype.toISOString) {
             myUtils.ms(this.getMilliseconds()) + 'Z';
     };
 }
-
 /**
  * 获取网络请求状态
  * @param {String} address 请求地址
@@ -27,7 +25,6 @@ if (!Date.prototype.toISOString) {
  * @param {String} type 类型 post、get
  */
 function initHAR(address, data, callback, type) {
-        
     function createHAR(address, title, startTime, resources) {
         var entries = [];
 
@@ -45,14 +42,13 @@ function initHAR(address, data, callback, type) {
             if (request.url.match(/(^data:image\/.*)/i)) {
                 return;
             }
-
             entries.push({
                 startedDateTime: request.time.toISOString(),
                 time: endReply.time - request.time,
                 request: {
                     method: request.method,
                     url: request.url,
-                    httpVersion: "HTTP/1.1",
+                    httpVersion: 'HTTP/1.1',
                     cookies: [],
                     headers: request.headers,
                     queryString: [],
@@ -62,10 +58,10 @@ function initHAR(address, data, callback, type) {
                 response: {
                     status: endReply.status,
                     statusText: endReply.statusText,
-                    httpVersion: "HTTP/1.1",
+                    httpVersion: 'HTTP/1.1',
                     cookies: [],
                     headers: endReply.headers,
-                    redirectURL: "",
+                    redirectURL: '',
                     headersSize: -1,
                     bodySize: startReply.bodySize,
                     content: {
@@ -90,7 +86,7 @@ function initHAR(address, data, callback, type) {
             log: {
                 version: '1.2',
                 creator: {
-                    name: "PhantomJS",
+                    name: 'PhantomJS',
                     version: phantom.version.major + '.' + phantom.version.minor +
                         '.' + phantom.version.patch
                 },
@@ -113,9 +109,9 @@ function initHAR(address, data, callback, type) {
     page.onLoadStarted = function () {
         page.startTime = new Date();
     };
-    page.loadFinished = function() {
-        console.log(new Date() - page.startTime)
-    }
+    page.loadFinished = function () {
+        console.log(new Date() - page.startTime);
+    };
     page.onResourceRequested = function (req) {
         page.resources[req.id] = {
             request: req,
@@ -133,7 +129,7 @@ function initHAR(address, data, callback, type) {
         }
     };
 
-    if(typeof data ==  'function') {
+    if (typeof data ==  'function') {
         type =  callback;
         callback = data;
     }
@@ -161,16 +157,15 @@ function initHAR(address, data, callback, type) {
             page.endTime = new Date();
             var loadTime = Date.now() - startTime;
             if (status !== 'success') {
-                typeof callback == 'function'
+                typeof callback === 'function'
                     ? callback({errcode: '-1', msg: 'FAIL to load the address', page: page, loadTime: loadTime})
                     : console.log('case error:FAIL to load ' + address);
-
             } else {
                 page.title = page.evaluate(function () {
                     return document.title;
                 });
                 har = createHAR(address, page.title, page.startTime, page.resources);
-                if(har.log.entries.length == 1 && errcodeList.indexOf(har.log.entries[0].response.status) >= 0) {
+                if (har.log.entries.length == 1 && errcodeList.indexOf(har.log.entries[0].response.status) >= 0) {
                     typeof callback == 'function'
                         ? callback({errcode: har.log.entries[0].response.status , msg: 'load error', loadTime: loadTime, page: page})
                         : '';
@@ -182,5 +177,6 @@ function initHAR(address, data, callback, type) {
             }
         });
     // }
-};
+}
+
 exports.initHAR = initHAR;

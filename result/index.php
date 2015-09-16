@@ -25,6 +25,7 @@ try {
 	p.text {margin-left: 40px;color: #fff;height: 18px;line-height: 18px;font-size:12px; background: #25cebc;}
 	p.text-info {color: #000; margin-left: 60px;height: 18px;line-height: 18px;font-size:12px; }
 	div .image {text-align: center;}
+	.red {background-color: #f00;color: #000;font-size: 12px;margin: 5px 0 5px 60px;}
 </style>
 <div id="container">
 	
@@ -42,8 +43,9 @@ try {
 		html.push(';失败数：');
 		html.push(retsult.fail);
 	 	html.push('</p>');
-	 	var len = retsult.caseInfo.length;
+	 	var len = retsult.caseInfo && retsult.caseInfo.length;
 	 	var className = 'success';
+	 	var resources;
 	 	for(var i = 0; i < len; i++) {
 	 		if (+retsult.caseInfo[i].fail > 0 ) {
 	 			className = 'fail';
@@ -55,9 +57,16 @@ try {
 	 		if (retsult.caseInfo[i].info && (typeof retsult.caseInfo[i].info.text === 'object')) {
 	 			html.push('<p class="text-info"><span>信息:</span>' + decodeURIComponent(retsult.caseInfo[i].info.text.join(',')) + '</p>');
 	 		}
+	 		resources = retsult.caseInfo[i].info && retsult.caseInfo[i].info.errorResource;
+	 		if (resources) {
+	 			for (var j = 0; j < resources.length; j++) {
+	 				html.push('<p class="red">[' + resources[j].status + '] ' + resources[j].url + '</p>');
+	 			}
+	 		}
 	 		if (retsult.caseInfo[i].info && retsult.caseInfo[i].info.image) {
 	 			html.push('<p class="image"><img src="' + retsult.caseInfo[i].info.image + '"></p>');
 	 		}
+
 	 	}
 	 	html.push('</div>');
 	}

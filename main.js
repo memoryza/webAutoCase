@@ -1,3 +1,8 @@
+/**
+ * @file 程序主入口
+ * @author memoryza(jincai.wang@foxmail.com)
+ * @desc 读取case执行程序，并自动调用testcase，最后收集信息
+ */
 var fs = require('fs');
 fs.changeWorkingDirectory(phantom.libraryPath);
 var myUtil = require('./common/utils');
@@ -11,6 +16,15 @@ var res = {
     total: 0,
     caseInfo: []
 };
+var len = cases.length;
+/**
+ * case跑完的回调
+ * @param {String} name case的名字
+ * @param {Integer} total case总数
+ * @param {Integer} success case成功数
+ * @param {Integer} fail case失败数
+ * @param {Object} info = {text:case错误信息存放, errorResource: 错误资源请求}
+ */
 var caseCallBack = function (name, total, success, fail, info) {
     res.success += success;
     res.fail += fail;
@@ -21,30 +35,9 @@ var caseCallBack = function (name, total, success, fail, info) {
         myUtil.writeJson(res);
         phantom.exit();
     }
-}
+};
 
-// // 读取case列表
-// try {
-//     var scanDirectory = function (path) {
-//         if (fs.exists(path) && fs.isFile(path)) {
-//             var modIdex = path.lastIndexOf('Case.js');
-//             if(modIdex > 0) {
-//                 caseList.push(require(path));
-//             }
-//         } else if (fs.isDirectory(path)) {
-//             fs.list(path).forEach(function (e) {
-//                 if ( e !== "." && e !== ".." ) {
-//                     scanDirectory(path + '/' + e);
-//                 }
-//             });
-//         }
-//     };
-//     scanDirectory('./case');
-// } catch(e) {
-//     phantom.exit(1);
-// }
 // 执行case
-var len = cases.length;
 for (var i = 0; i < len; i++) {
     (function (j) {
         appCase.testCase(cases[j], caseCallBack);

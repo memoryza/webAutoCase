@@ -4,10 +4,10 @@ node_modules/
 result/error/
 result/ret.json
 test/
-
+mock/
 npm-debug.log
 
 performanceTest.js
 
 result/res.json
-
+mind.md
