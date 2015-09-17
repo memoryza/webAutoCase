@@ -1,9 +1,10 @@
 <?php
 date_default_timezone_set('Asia/shanghai');
 error_reporting(E_ALL);
+$timestamp = isset($_GET['timestamp']) && $_GET['timestamp'] ? $_GET['timestamp'] : '';
 try {
 	if (file_exists('res.json')) {
-		$content = file_get_contents('./res.json');
+		$content = file_get_contents('./res_' . $timestamp . '.json');
 	}
 } catch (Exception $e) {
 	var_dump($e);
@@ -26,7 +27,9 @@ try {
 	p.text-info {color: #000; margin-left: 60px;height: 18px;line-height: 18px;font-size:12px; }
 	div .image {text-align: center;}
 	.red {background-color: #f00;color: #000;font-size: 12px;margin: 5px 0 5px 60px;}
+	strong {color: #000;}
 </style>
+<strong><?php echo $timestamp ? '日期：' . (str_replace('_', '-', substr($timestamp, 0, 10)) . ' ' . (str_replace('_', ':' , substr($timestamp, 11, 8)))) : '';?></strong>
 <div id="container">
 	
 </div>

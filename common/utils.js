@@ -70,9 +70,11 @@ var utils = {
      * 输出json数据
      * @param {JSON}  json 数据
      * @param {String} path 路径
+     * @param {String} timestamp YYYY_MM_DD_HH_mm_ss_xxx时间字符串
      */
-    writeJson: function (json, path) {
-        path = path || 'result/res.json';
+    writeJson: function (json, timestamp, path) {
+        timestamp = timestamp || '';
+        path = path || 'result/res_' + timestamp + '.json';
         try {
             fs.write(path, (typeof json === 'string' ? json : JSON.stringify(json)), 'w');
         } catch (e) {

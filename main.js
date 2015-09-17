@@ -17,6 +17,7 @@ var res = {
     caseInfo: []
 };
 var len = cases.length;
+
 /**
  * case跑完的回调
  * @param {String} name case的名字
@@ -32,7 +33,10 @@ var caseCallBack = function (name, total, success, fail, info) {
     res.caseInfo.push({name: name, success: success, fail: fail, total: total, info: info});
     caseNum++;
     if (caseNum === len) {
-        myUtil.writeJson(res);
+        if (res.fail) {
+            var timestamp = myUtil.getDateString();
+            myUtil.writeJson(res, timestamp);
+        }
         phantom.exit();
     }
 };
