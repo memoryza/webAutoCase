@@ -19,6 +19,10 @@
    
    例子截图效果如下：
    <img src="./tmp/snap1.png">
+  
+4、配置监控报警
+
+  common/config.js 中包含报警邮件配置，发送方需开启SMTP服务，具体支持邮件服务情况请参见nodemailer-wellkown
    
    
    
@@ -46,3 +50,10 @@
 
   2、增加对无case的处理
   
+  日期：2015-09-18
+  
+  1、将phantomjs运行更改为nodejs运行
+
+  2、增加发送报警邮件
+  
+  3、增加时时错误日志记录
