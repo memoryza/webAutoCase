@@ -9,7 +9,7 @@
 
 2、执行命令
    
-    phantomjs main.js
+    node main.js
  
 3、产看产出结果
 
@@ -26,7 +26,7 @@
 
 1、这是什么？
 
-答：这是一个基于phantomjs的网页测试工具。
+答：这是一个基于phantom-node的网页测试工具。
 
 2、可以做什么？
 

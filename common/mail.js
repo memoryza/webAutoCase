@@ -22,12 +22,6 @@ function Mailer(config) {
     }
    
     var dp = this.defaultParams;
-     console.log({service: dp.service,
-        use_authentication: dp.useAuth,
-        auth: {
-            user: dp.from,
-            pass: dp.pass
-        }});
     this.transporter =  nodemailer.createTransport({
         service: dp.service,
         use_authentication: dp.useAuth,

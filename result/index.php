@@ -3,13 +3,10 @@ date_default_timezone_set('Asia/shanghai');
 error_reporting(E_ALL);
 $timestamp = isset($_GET['timestamp']) && $_GET['timestamp'] ? $_GET['timestamp'] : '';
 try {
-	if (file_exists('res.json')) {
-		$content = file_get_contents('./res_' . $timestamp . '.json');
-	}
+	$content = file_get_contents('./res_' . $timestamp . '.json');
 } catch (Exception $e) {
 	var_dump($e);
 }
-	
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,7 +16,8 @@ try {
 <body>
 <style type="text/css">
     * {margin: 0; padding: 0;}
-	body{color: #fff;}
+	body{}
+	#container {color: #fff;}
 	p.title{background: #44e2f0;height: 24px;line-height: 24px;font-size:16px;}
 	p.success {margin-left: 20px;background: #76ff86;height: 18px;line-height: 18px;font-size:14px;}
 	p.fail {margin-left: 20px;background: #f00;height: 18px;line-height: 18px;font-size:14px;}

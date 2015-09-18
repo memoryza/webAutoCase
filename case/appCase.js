@@ -42,23 +42,25 @@ exports.testCase = function (info, cb) {
             return cb(caseInfo.name, 0, 0, 0, info);
         }
     }
-    var parallel = [];// 存放并行执行的case
+    // 存放并行执行的case
+    var parallel = [];
     var totalCase = caseInfo.caseList.length;
     for (var i = 0; i < totalCase; i++) {
         (function (j) {
             parallel.push(function() {
-                var ret = funcData.page.evaluate('function () {'
-                    + 'return eval(' + caseInfo.caseList[j] + ');}');
-                if (ret) {
-                    successCase++;
-                } else {
-                    info.text.push(encodeURIComponent(caseInfo.caseList[j] + '失败'));
-                    failCase++;
-                }
+                funcData.page.evaluate(function(selector) {
+                    return eval(selector);
+                }, function(result) {
+                    if (result) {
+                        successCase++;
+                    } else {
+                        info.text.push(encodeURIComponent(caseInfo.caseList[j] + '失败'));
+                        failCase++;
+                    }
+                }, caseInfo.caseList[j]);
             });
         })(i);
     }
-
     if (caseInfo.url && caseInfo.caseList.length) {
         nimble.series([
             function (callback) {
@@ -70,8 +72,11 @@ exports.testCase = function (info, cb) {
                         info.text.push('网络请求失败');
                         failCase = totalCase;
                     }
-                    analyseResoures(data.har);
-                    callback();
+                    // page.evaluate是异步的
+                    setTimeout(function() {
+                        analyseResoures(data.har);
+                        callback();
+                    }, 100);
                 });
             },
             function () {
@@ -85,6 +90,7 @@ exports.testCase = function (info, cb) {
                 } else {
                    snap(funcData.page, cb);
                 }
+                funcData.phantom.exit();
             }
         ]);
     }

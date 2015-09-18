@@ -17,7 +17,6 @@ var res = {
     caseInfo: []
 };
 var len = cases.length;
-
 /**
  * case跑完的回调
  * @param {String} name case的名字
@@ -39,7 +38,9 @@ var caseCallBack = function (name, total, success, fail, info) {
             myUtil.writeJson(res, timestamp);
             myUtil.sendWariningEmail(timestamp);
         }
-        phantom.exit();
+        setTimeout(function() {
+            process.exit();
+        }, 1000);
     }
 };
 

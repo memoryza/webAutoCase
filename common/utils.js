@@ -78,9 +78,9 @@ var utils = {
         timestamp = timestamp || '';
         path = path || 'result/res_' + timestamp + '.json';
         try {
-            fs.write(path, (typeof json === 'string' ? json : JSON.stringify(json)), 'w');
+            fs.writeFileSync(path, (typeof json === 'string' ? json : JSON.stringify(json)));
         } catch (e) {
-            console.log(e);
+            console.log('webautocase writeFile Error:' + e);
         }
     },
     /**
@@ -96,7 +96,10 @@ var utils = {
      * @timestamp
      **/
     sendWariningEmail: function (timestamp) {
-        mailer.sendMail({content: '报警邮件连接地址 http://gushi.baidu.com/?timestamp=' + timestamp, subject: 'XXX报警邮件'});
+        var mailConfig = config.mailer;
+        mailConfig.content = '报警邮件连接地址 http://gushi.baidu.com/?timestamp=' + timestamp;
+        mailConfig.subject = 'XXX报警邮件';
+        mailer.sendMail(mailConfig);
     }
 };
 module.exports = utils;
