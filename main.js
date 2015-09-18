@@ -3,8 +3,8 @@
  * @author memoryza(jincai.wang@foxmail.com)
  * @desc 读取case执行程序，并自动调用testcase，最后收集信息
  */
+var startTime = +new Date();
 var fs = require('fs');
-fs.changeWorkingDirectory(phantom.libraryPath);
 var myUtil = require('./common/utils');
 var cases = require('./casemain');
 var appCase = require('./case/appCase');
@@ -33,9 +33,11 @@ var caseCallBack = function (name, total, success, fail, info) {
     res.caseInfo.push({name: name, success: success, fail: fail, total: total, info: info});
     caseNum++;
     if (caseNum === len) {
+        console.log('耗时:' + (new Date() - startTime) + 'ms');
         if (res.fail) {
             var timestamp = myUtil.getDateString();
             myUtil.writeJson(res, timestamp);
+            myUtil.sendWariningEmail(timestamp);
         }
         phantom.exit();
     }

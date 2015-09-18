@@ -3,10 +3,7 @@
  * @author memoryza(jincai.wang@foxmail.com)
  * @desc 收集请求回来的har信息
  */
-
 var fs = require('fs');
-fs.changeWorkingDirectory(phantom.libraryPath);
-
 var $ = require('jquery');
 var har = require('../common/createHAR');
 var nimble = require('nimble');

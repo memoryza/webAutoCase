@@ -3,6 +3,8 @@
  * @author memoryza(jincai.wang@foxmail.com)
  */
 var fs = require('fs');
+var mailer = require('./mail');
+var config = require('./config');
 var utils = {
     /**
      * 获取时间
@@ -88,6 +90,13 @@ var utils = {
      */
     isType: function (obj, type) {
         return Object.prototype.toString.call(obj) === '[object ' + type + ']';
+    },
+    /**
+     * 发送报警邮件
+     * @timestamp
+     **/
+    sendWariningEmail: function (timestamp) {
+        mailer.sendMail({content: '报警邮件连接地址 http://gushi.baidu.com/?timestamp=' + timestamp, subject: 'XXX报警邮件'});
     }
 };
 module.exports = utils;
