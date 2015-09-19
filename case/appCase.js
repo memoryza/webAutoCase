@@ -48,7 +48,14 @@ exports.testCase = function (info, cb) {
         (function (j) {
             parallel.push(function() {
                 funcData.page.evaluate(function(selector) {
-                    return eval(selector);
+                    var flag;
+                    try {
+                       var anonymousFunc = new Function(selector);
+                       flag = anonymousFunc();
+                    } catch(e) {
+                        flag = false;
+                    }
+                    return flag;
                 }, function(result) {
                     if (result) {
                         successCase++;
@@ -93,7 +100,7 @@ exports.testCase = function (info, cb) {
                         snap(funcData.page, cb);
                     }
                 }
-                funcData.phantom.exit();
+                // funcData.phantom.exit();
             }
         ]);
     }
