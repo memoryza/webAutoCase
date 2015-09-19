@@ -4,7 +4,7 @@
  */
 var nodemailer = require('nodemailer');
 var fs = require('fs');
-
+var loger = require('./writelog');
 function Mailer(config) {
     this.defaultParams = {
         from: 'webautocase@126.com',// 邮箱发送人地址
@@ -70,7 +70,10 @@ Mailer.prototype.send = function() {
     };
     this.transporter.sendMail(mailOptions, function(error, info){
         if(error){
-            console.log(error);
+            loger.write('邮件发送失败');
+            loger.write(error);
+            loger.end();
+            console.log('send fail, please read result/log/log.txt');
         }else{
             console.log('send ok!');
         }

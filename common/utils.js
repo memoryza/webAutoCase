@@ -5,6 +5,7 @@
 var fs = require('fs');
 var mailer = require('./mail');
 var config = require('./config');
+var loger = require('./writelog');
 var utils = {
     /**
      * 获取时间
@@ -100,6 +101,17 @@ var utils = {
         mailConfig.content = '报警邮件连接地址 http://gushi.baidu.com/?timestamp=' + timestamp;
         mailConfig.subject = 'XXX报警邮件';
         mailer.sendMail(mailConfig);
+    },
+    /**
+     * 一次写入日志（适用于一次对文本的读写
+     * @param {String} 写入内容
+     */
+    writeOnce: function (content) {
+        if (utils.isType(content, 'Object')) {
+            content = JSON.stringify(content);
+        }
+        loger.write(content);
+        loger.end();
     }
 };
 module.exports = utils;

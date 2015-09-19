@@ -4,28 +4,29 @@
  * @author memoryza
  */
 var fs = require('fs');
-fs.changeWorkingDirectory(phantom.libraryPath);
 var instance = null;
 function WriteFile() {
     this.content = '';
-    this.logFile = 'log/info.log';
+    this.logFile = 'result/log/log.txt';
     this._start();
 }
 WriteFile.prototype = {
     _start: function (file) {
-        this.content += '\n\n===[log]' + this.getDate() + '===\n';
+        this.content += '\n\n===' + this.getDate() + '===\n';
         this.logFile = file || this.logFile;
     },
     write: function (str) {
+        if (typeof str === 'object') {
+            str = JSON.stringify(str);
+        }
         this.content += '\n' + str + '\n';
     },
     end: function () {
         this.content += '====END====\n';
         try {
-            fs.write(this.logFile, this.content, 'w+');
-            fs.close();
+            fs.appendFileSync(this.logFile, this.content);
         } catch (e) {
-            console.log(e);
+            console.log('WriteLog module write fail:' + e);
         }
     },
     getDate: function () {
@@ -39,9 +40,4 @@ WriteFile.prototype = {
         return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
     }
 };
-exports.getInstance = function () {
-    if (!instance) {
-        instance = new WriteFile();
-    }
-    return instance;
-};
+module.exports = new WriteFile();

@@ -8,7 +8,6 @@ var $ = require('jquery');
 var har = require('../common/createHAR');
 var nimble = require('nimble');
 var myUtils = require('../common/utils');
-
 /**
  * 测试case情况
  * @param {Object} info {name: case名称, url: 网址, caseList: case列表的数组}
@@ -88,7 +87,11 @@ exports.testCase = function (info, cb) {
                         cb(caseInfo.name, totalCase, successCase, failCase, info);
                     }
                 } else {
-                   snap(funcData.page, cb);
+                    if (funcData.errcode == -1) {
+                        cb(caseInfo.name, totalCase, successCase, failCase, info);
+                    } else {
+                        snap(funcData.page, cb);
+                    }
                 }
                 funcData.phantom.exit();
             }
@@ -118,7 +121,7 @@ exports.testCase = function (info, cb) {
      * @param {HAR} har： HTTP Archive Viewer
      */
     function analyseResoures(har) {
-        if (har.log && myUtils.isType(har.log.entries, 'Array')) {
+        if (har && har.log && myUtils.isType(har.log.entries, 'Array')) {
             var entries = har.log.entries;
             var len = entries.length;
             for (var i = 0; i < len; i++) {

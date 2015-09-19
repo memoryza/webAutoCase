@@ -1,12 +1,40 @@
 <?php
 date_default_timezone_set('Asia/shanghai');
 error_reporting(E_ALL);
-$timestamp = isset($_GET['timestamp']) && $_GET['timestamp'] ? $_GET['timestamp'] : '';
-try {
-	$content = file_get_contents('./res_' . $timestamp . '.json');
-} catch (Exception $e) {
-	var_dump($e);
+// 获取某一时刻的错误日志
+function getErrorContent($timestamp) {
+	$content = '';
+	try {
+		$content = file_get_contents('./res_' . $timestamp . '.json');
+	} catch (Exception $e) {
+		var_dump($e);
+	}
+	return $content;
 }
+$timestamp = isset($_GET['timestamp']) && $_GET['timestamp'] ? $_GET['timestamp'] : '';
+$content = getErrorContent($timestamp);
+
+// 获取performance异常信息
+function getExceptionList() {
+	$eList = array();
+	try {
+		$content = file_get_contents('./log/log.txt');
+		$tmpList = explode('====END====', $content);
+		foreach ($tmpList as $key => $value) {
+			$tmp = explode('===', $value);
+			if (sizeof($tmp) === 3) {
+				$eList[] = array(
+					'time'    => $tmp[1],
+					'content' => $tmp[2],
+				);
+			}
+		}
+	} catch (Exception $e) {
+		var_dump($e);
+	}
+	return $eList;
+}
+$exceptionList = getExceptionList();
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,8 +53,20 @@ try {
 	p.text-info {color: #000; margin-left: 60px;height: 18px;line-height: 18px;font-size:12px; }
 	div .image {text-align: center;}
 	.red {background-color: #f00;color: #000;font-size: 12px;margin: 5px 0 5px 60px;}
-	strong {color: #000;}
+	strong {color: #000;background: #F00;}
+
 </style>
+<?php if($exceptionList) { ?>
+	<div>
+		<fieldset>
+		    <legend>性能监控工具异常信息</legend>
+		    <?php foreach ($exceptionList as $key => $value) { ?>
+		    	<div><strong><?php echo $value['time'];?> </strong><?php echo $value['content'];?></div>
+		    <?php } ?>
+		    <?php echo $exceptionInfo;?>
+		</fieldset>
+	</div>
+<?php } ?>
 <strong><?php echo $timestamp ? '日期：' . (str_replace('_', '-', substr($timestamp, 0, 10)) . ' ' . (str_replace('_', ':' , substr($timestamp, 11, 8)))) : '';?></strong>
 <div id="container">
 	
