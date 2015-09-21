@@ -98,7 +98,7 @@ var utils = {
      **/
     sendWariningEmail: function (timestamp) {
         var mailConfig = config.mailer;
-        mailConfig.content = '报警邮件连接地址 http://gushi.baidu.com/?timestamp=' + timestamp;
+        mailConfig.content = '报警邮件连接地址 ' + config.warningSite + '?timestamp=' + timestamp;
         mailConfig.subject = 'XXX报警邮件';
         mailer.sendMail(mailConfig);
     },

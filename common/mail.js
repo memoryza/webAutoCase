@@ -20,7 +20,6 @@ function Mailer(config) {
             this.defaultParams[key] = config[key];
         }
     }
-   
     var dp = this.defaultParams;
     this.transporter =  nodemailer.createTransport({
         service: dp.service,

@@ -63,7 +63,6 @@ $exceptionList = getExceptionList();
 		    <?php foreach ($exceptionList as $key => $value) { ?>
 		    	<div><strong><?php echo $value['time'];?> </strong><?php echo $value['content'];?></div>
 		    <?php } ?>
-		    <?php echo $exceptionInfo;?>
 		</fieldset>
 	</div>
 <?php } ?>
