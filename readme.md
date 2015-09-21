@@ -5,7 +5,7 @@
   
 1、下载webAutoCase切换到跟目录执行
   
-     npm install 
+     npm install  && npm install phantomjs -g
 
 2、执行命令
    
