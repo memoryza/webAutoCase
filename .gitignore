@@ -1,13 +1,14 @@
 #测试文件
 log/
 node_modules/
+result/admin/node_modules/
+result/admin/templates/
 result/error/
 result/ret.json
 test/
 mock/
 npm-debug.log
 
-performanceTest.js
 
 result/*.json
 mind.md

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#网站自动化脚本，主要用于发布项目和停止进程用的，fuck没学过shell啊，以下为瞎写的哈哈
+function start {
+	cd ../public
+	grunt build
+	cd ../bin
+	if [ ! -f "pid" ];then
+   	 	node ../watchman.js&
+    	echo $! > pid
+	fi
+}
+function stop {
+	if [ -f "pid" ];then
+	 	kill $(tr -d "\r\n" < pid)
+  		rm pid
+	fi
+}
+if [ -z $1 ]; then
+	echo "请输入:./publish restart|start|stop"
+elif [ $1 = "start" ]; then
+	start
+    echo "start"
+elif [ $1 = "stop" ];then
+	stop
+	echo "stop"
+elif [ $1 = "restart" ];then
+	stop
+	start
+	echo "restart"
+fi
+exit 0
+

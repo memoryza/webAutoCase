@@ -16,7 +16,9 @@
   "author": "memoryza",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.1.2",
     "jquery": "^2.1.4",
+    "mysql": "git://github.com/felixge/node-mysql.git",
     "nimble": "0.0.2",
     "nodemailer": "^1.4.0",
     "phantom": "^0.7.2",
